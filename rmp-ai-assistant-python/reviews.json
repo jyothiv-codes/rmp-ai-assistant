@@ -1,0 +1,34 @@
+{
+  "reviews": [
+    {
+      "professor": "Prof1",
+      "review": "Great professor who makes complex topics easy to understand. Highly recommended!",
+      "subject": "Math",
+      "stars": 5
+    },
+    {
+      "professor": "Prof2",
+      "review": "Knowledgeable but his lectures are often disorganized. Could use some improvement.",
+      "subject": "History",
+      "stars": 3
+    },
+    {
+      "professor": "Prof3",
+      "review": "Engaging and enthusiastic. Really brings the subject to life!",
+      "subject": "Biology",
+      "stars": 4
+    },
+    {
+      "professor": "Prof4",
+      "review": "Strict but fair. Expects a lot from students but is always willing to help.",
+      "subject": "Chemistry",
+      "stars": 4
+    },
+    {
+      "professor": "Prof5",
+      "review": "Fantastic professor with a lot of real-world experience. Classes are very interactive.",
+      "subject": "Economics",
+      "stars": 5
+    }
+  ]
+}
