@@ -24,10 +24,10 @@ export default function Home() {
       },
       body: JSON.stringify([...messages, {role: 'user', content: message}]),
     }).then(async (res) => {
+      if (res.body) {
       const reader = res.body.getReader()
       const decoder = new TextDecoder()
       let result = ''
-  
       return reader.read().then(function processText({done, value}) {
         if (done) {
           return result
@@ -43,6 +43,12 @@ export default function Home() {
         })
         return reader.read().then(processText)
       })
+    } else {
+      // Handle the case where res.body is null
+      console.error('Response body is null');
+    }
+  
+      
     })
   }
   return (
