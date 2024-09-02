@@ -35,4 +35,4 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-rmp-ai-assistant-python/.env
+/rmp-ai-assistant-python/.env
