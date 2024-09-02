@@ -1,56 +1,67 @@
-'use client'
-import { Box, Button, Stack, TextField } from '@mui/material'
-import { useState } from 'react'
+'use client';
+
+import { Box, Button, Stack, TextField } from '@mui/material';
+import { useState } from 'react';
+
+interface Message {
+  role: 'assistant' | 'user';
+  content: string;
+}
+
 export default function Home() {
-  const [messages, setMessages] = useState([
+  const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
       content: `Hi! I'm the Rate My Professor support assistant. How can I help you today?`,
     },
-  ])
-  const [message, setMessage] = useState('')
-  const sendMessage = async () => {
-    setMessage('')
+  ]);
+
+  const [message, setMessage] = useState<string>('');
+
+  const sendMessage = async (): Promise<void> => {
+    setMessage('');
     setMessages((messages) => [
       ...messages,
-      {role: 'user', content: message},
-      {role: 'assistant', content: ''},
-    ])
-  
-    const response = fetch('/api/chat', {
+      { role: 'user', content: message },
+      { role: 'assistant', content: '' },
+    ]);
+
+    const response = await fetch('/api/chat', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify([...messages, {role: 'user', content: message}]),
-    }).then(async (res) => {
-      if (res.body) {
-      const reader = res.body.getReader()
-      const decoder = new TextDecoder()
-      let result = ''
-      return reader.read().then(function processText({done, value}) {
+      body: JSON.stringify([...messages, { role: 'user', content: message }]),
+    });
+
+    if (response.body) {
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let result = '';
+
+      const processText = async (readResult: ReadableStreamReadResult<Uint8Array>): Promise<string> => {
+        const { done, value } = readResult;
         if (done) {
-          return result
+          return result;
         }
-        const text = decoder.decode(value || new Uint8Array(), {stream: true})
+        const text = decoder.decode(value || new Uint8Array(), { stream: true });
         setMessages((messages) => {
-          let lastMessage = messages[messages.length - 1]
-          let otherMessages = messages.slice(0, messages.length - 1)
+          let lastMessage = messages[messages.length - 1];
+          let otherMessages = messages.slice(0, messages.length - 1);
           return [
             ...otherMessages,
-            {...lastMessage, content: lastMessage.content + text},
-          ]
-        })
-        return reader.read().then(processText)
-      })
+            { ...lastMessage, content: lastMessage.content + text },
+          ];
+        });
+        return reader.read().then(processText);
+      };
+
+      await reader.read().then(processText);
     } else {
-      // Handle the case where res.body is null
       console.error('Response body is null');
     }
-  
-      
-    })
-  }
+  };
+
   return (
     <Box
       width="100vw"
@@ -112,5 +123,5 @@ export default function Home() {
         </Stack>
       </Stack>
     </Box>
-  )
+  );
 }
